@@ -7,12 +7,19 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(DXF_ROOT)\include;$(DXF_ROOT)\extern\zlib-1.2.8\include;$(DXF_ROOT)\extern\libjpeg8d\include;$(DXF_ROOT)\extern\libpng-1.4.1\include;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DXF_ROOT)\include;$(DXF_ROOT)\extern\zlib-1.2.8\include;$(DXF_ROOT)\extern\libjpeg8d\include;$(DXF_ROOT)\extern\libpng-1.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(DXF_ROOT)\extern\glew-1.10.0\lib\;$(DXF_ROOT)\extern\libpng-1.4.1\lib;$(DXF_ROOT)\extern\zlib-1.2.8\lib;$(DXF_ROOT)\extern\libjpeg8d\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlib.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

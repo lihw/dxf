@@ -26,6 +26,7 @@
 
 #if defined _MSC_VER || defined _WIN32
 # define DXF_WIN32
+# include <Windows.h>
 #else
 # error "DXFramework supports win32 only"
 #endif
