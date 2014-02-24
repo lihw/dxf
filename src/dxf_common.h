@@ -31,6 +31,16 @@
 # error "DXFramework supports win32 only"
 #endif
 
+
+// 
+// DirectX 11.1 headers
+//
+#include <d3dcommon.h>
+#include <dxgi.h>
+#include <d3d11_1.h>
+#include <d3dcompiler.h>
+
+
 #if defined DXF_WIN32
 
 #define DXF_DLLEXPORT 

@@ -46,20 +46,11 @@ public:
     virtual void keyboard(UINT c, 
                           bool bKeyDown, 
                           bool bAltDown);
+    virtual LRESULT msgproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    
     // TODO: mouse
 
 protected:
-    HRESULT createShaderFromFile(ID3D11Device* pd3dDevice, 
-                                 LPCWSTR pSrcFile, 
-                                 const D3D_SHADER_MACRO* pDefines, 
-                                 LPD3DINCLUDE pInclude, 
-                                 LPCSTR pFunctionName, 
-                                 LPCSTR pProfile, 
-                                 UINT Flags1, 
-                                 UINT Flags2, 
-                                 ID3D11DeviceChild** ppShader, 
-                                 ID3DBlob** ppShaderBlob = NULL, 
-                                 BOOL bDumpShader = FALSE);
 
 protected:
     CDXUTTextHelper*     m_txtHelper;

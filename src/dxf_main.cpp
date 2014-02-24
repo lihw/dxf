@@ -188,7 +188,10 @@ LRESULT CALLBACK MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, boo
         return 0;
     }
 
-    // TODO: mouse event to renderer
+    if (dxf::getRenderer() != NULL)
+    {
+        dxf::getRenderer()->msgproc(hWnd, uMsg, wParam, lParam);
+    }
 
     return 0;
 }

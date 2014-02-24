@@ -82,91 +82,9 @@ void AbstractRenderer::keyboard(UINT c,
 {
 }
 
-HRESULT AbstractRenderer::createShaderFromFile(ID3D11Device* pd3dDevice, 
-                                               LPCWSTR pSrcFile, 
-                                               const D3D_SHADER_MACRO* pDefines, 
-                                               LPD3DINCLUDE pInclude, 
-                                               LPCSTR pFunctionName, 
-                                               LPCSTR pProfile, 
-                                               UINT Flags1, 
-                                               UINT Flags2, 
-                                               ID3D11DeviceChild** ppShader, 
-                                               ID3DBlob** ppShaderBlob, 
-                                               BOOL bDumpShader)
+LRESULT AbstractRenderer::msgproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    HRESULT   hr = S_OK;
-    ID3DBlob* pShaderBlob = NULL;
-    ID3DBlob* pErrorBlob = NULL;
-    WCHAR     wcFullPath[256];
-    
-    DXUTFindDXSDKMediaFileCch(wcFullPath, 256, pSrcFile);
-    // Compile shader into binary blob
-    hr = D3DCompileFromFile(wcFullPath, pDefines, pInclude, pFunctionName, pProfile, 
-                            Flags1, Flags2, &pShaderBlob, &pErrorBlob);
-    if (FAILED(hr))
-    {
-        OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-        SAFE_RELEASE(pErrorBlob);
-        return hr;
-    }
-    
-    // Create shader from binary blob
-    if (ppShader)
-    {
-        hr = E_FAIL;
-        if (strstr(pProfile, "vs"))
-        {
-            hr = pd3dDevice->CreateVertexShader(pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11VertexShader**)ppShader);
-        }
-        else if (strstr(pProfile, "hs"))
-        {
-            hr = pd3dDevice->CreateHullShader(pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11HullShader**)ppShader); 
-        }
-        else if (strstr(pProfile, "ds"))
-        {
-            hr = pd3dDevice->CreateDomainShader(pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11DomainShader**)ppShader);
-        }
-        else if (strstr(pProfile, "gs"))
-        {
-            hr = pd3dDevice->CreateGeometryShader(pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11GeometryShader**)ppShader); 
-        }
-        else if (strstr(pProfile, "ps"))
-        {
-            hr = pd3dDevice->CreatePixelShader(pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11PixelShader**)ppShader); 
-        }
-        else if (strstr(pProfile, "cs"))
-        {
-            hr = pd3dDevice->CreateComputeShader(pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11ComputeShader**)ppShader);
-        }
-        if (FAILED(hr))
-        {
-            OutputDebugString(L"Shader creation failed\n");
-            SAFE_RELEASE(pErrorBlob);
-            SAFE_RELEASE(pShaderBlob);
-            return hr;
-        }
-    }
-
-    // If blob was requested then pass it otherwise release it
-    if (ppShaderBlob)
-    {
-        *ppShaderBlob = pShaderBlob;
-    }
-    else
-    {
-        pShaderBlob->Release();
-    }
-
-    DXUT_SetDebugName(*ppShader, pFunctionName);
-
-    // Return error code
-    return hr;
+    return 0;
 }
 
 DXF_NAMESPACE_END

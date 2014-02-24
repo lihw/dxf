@@ -12,17 +12,13 @@
 #include <directxcolors.h>
 
 
-DXF_NAMESPACE_BEGIN
-
-struct SimpleVertex
-{
-    DirectX::XMFLOAT3 Pos;
-};
-
-
 Renderer::Renderer()
     : AbstractRenderer()
 {
+    m_shader = NULL;
+    m_teapot = NULL;
+    m_cbInit = NULL;
+    m_cbEveryFrame = NULL;
 }
 
 Renderer::~Renderer()
@@ -38,77 +34,55 @@ HRESULT Renderer::initialize(ID3D11Device* device,
     AbstractRenderer::initialize(device, context, txtHelper);
     
     //
-    // Compile shaders
+    // shaders
     //
-    DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined( DEBUG ) || defined( _DEBUG )
-    // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
-    // the release configuration of this program.
-    dwShaderFlags |= D3DCOMPILE_DEBUG;
-#endif
-
 #define SHADER_ROOT L"../demos/template/media/shaders"
-    ID3DBlob* pBlobVS = NULL;
-    ID3D11DeviceChild* outputShader = NULL;
-    V_RETURN(createShaderFromFile(device, SHADER_ROOT L"/template.hlsl", NULL, NULL, "VS",
-                "vs_5_0", dwShaderFlags, 0, &outputShader, &pBlobVS));
-    m_vertexShader = (ID3D11VertexShader*)outputShader;
-    V_RETURN(createShaderFromFile(device, SHADER_ROOT L"/template.hlsl", NULL, NULL, "PS",
-                "ps_5_0", dwShaderFlags, 0, &outputShader));
-    m_pixelShader = (ID3D11PixelShader*)outputShader;
+    m_shader = new dxf::Shader(m_device);
+    V_RETURN(m_shader->addVSShader(SHADER_ROOT L"/template.hlsl", "VS"));
+    V_RETURN(m_shader->addPSShader(SHADER_ROOT L"/template.hlsl", "PS"));
+#undef SHADER_ROOT 
+
+    //
+    // Models
+    //
+#define MODEL_ROOT "../demos/template/media/models"
+    m_teapot = new dxf::Model(m_device);
+    V_RETURN(m_teapot->loadObj(MODEL_ROOT"/teapot.obj", m_shader));
+#undef MODEL_ROOT
+
+    //
+    // Constant buffers
+    //
+    m_cbEveryFrame = new dxf::CBuffer<CbEveryFrameStruct>(m_device);
+    V_RETURN(m_cbEveryFrame->create(m_context, "cb-everyframe", "vs", 0));
     
-    //
-    // Create vertex layout for scene meshes
-    //
-    const D3D11_INPUT_ELEMENT_DESC vertexElements[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-    V_RETURN(m_device->CreateInputLayout(vertexElements, ARRAYSIZE(vertexElements), 
-                pBlobVS->GetBufferPointer(), pBlobVS->GetBufferSize(), &m_vertexLayout));
-    SAFE_RELEASE(pBlobVS);
-    DXUT_SetDebugName(m_vertexLayout, "Primary");
+    m_cbInit = new dxf::CBuffer<CbInitStruct>(m_device);
+    V_RETURN(m_cbInit->create(m_context, "cb-init", "vs", 1));
 
-    m_context->IASetInputLayout(m_vertexLayout);
+    m_cbInit->data().light.position = DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f);
+    m_cbInit->data().light.ambient  = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+    m_cbInit->data().light.diffuse  = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+    m_cbInit->data().light.specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+    m_cbInit->sync(m_context);
+
+
+    //
+    // Camera
+    //
+    DirectX::XMFLOAT3 eye(0.0f, 0.0f, -4.0f);
+    DirectX::XMFLOAT3 at(0.0f, 0.0f, 0.0f);
     
+    DirectX::XMVECTOR vecEye = DirectX::XMLoadFloat3(&eye);
+    DirectX::XMVECTOR vecAt = DirectX::XMLoadFloat3(&at);
     
+    m_camera.SetViewParams(vecEye, vecAt);
+
     //
-    // Create models
+    // State
     //
-   
-    SimpleVertex vertices[] =
-    {
-        DirectX::XMFLOAT3(0.0f, 0.5f, 0.5f),
-        DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f),
-        DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f),
-    };
-    D3D11_BUFFER_DESC bd;
-    ZeroMemory( &bd, sizeof(bd) );
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(SimpleVertex) * 3;
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = 0;
-
-    D3D11_SUBRESOURCE_DATA InitData;
-    ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = vertices;
-    V_RETURN(m_device->CreateBuffer(&bd, &InitData, &m_vertexBuffer));
-    if ( FAILED( hr ) )
-        return hr;
-
-    // Set vertex buffer
-    UINT stride = sizeof(SimpleVertex);
-    UINT offset = 0;
-    m_context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-
-    // Set primitive topology
-    m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
     D3D11_DEPTH_STENCIL_DESC dsDesc;
     ZeroMemory(&dsDesc, sizeof(dsDesc));
-    dsDesc.DepthEnable = false;
+    dsDesc.DepthEnable = true;
     dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
@@ -119,11 +93,11 @@ HRESULT Renderer::initialize(ID3D11Device* device,
 
 void Renderer::uninitialize()
 {
-    SAFE_RELEASE(m_vertexBuffer);
-    SAFE_RELEASE(m_vertexLayout);
-    SAFE_RELEASE(m_vertexShader);
-    SAFE_RELEASE(m_pixelShader);
+    SAFE_DELETE(m_teapot);
+    SAFE_DELETE(m_shader);
     SAFE_RELEASE(m_dsState);
+    SAFE_DELETE(m_cbEveryFrame);
+    SAFE_DELETE(m_cbInit);
 }
 
 void Renderer::render(double fTime, 
@@ -134,21 +108,19 @@ void Renderer::render(double fTime,
     ID3D11RenderTargetView* pRTV = DXUTGetD3D11RenderTargetView();
     m_context->ClearRenderTargetView(pRTV, ClearColor);
 
-    UINT stride = sizeof(SimpleVertex);
-    UINT offset = 0;
-    m_context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-    m_context->IASetInputLayout(m_vertexLayout);
-    m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    ID3D11DepthStencilView* pDSV = DXUTGetD3D11DepthStencilView();
+    m_context->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0, 0);
 
-    m_context->VSSetShader(m_vertexShader, NULL, 0);
-    m_context->PSSetShader(m_pixelShader, NULL, 0);
-    m_context->HSSetSamplers(NULL, 0, 0);
-    m_context->DSSetSamplers(NULL, 0, 0);
-    m_context->GSSetSamplers(NULL, 0, 0);
+    m_shader->bind(m_context);
 
     m_context->OMSetDepthStencilState(m_dsState, 0);
+
+    DirectX::XMMATRIX mProj = m_camera.GetProjMatrix();
+    DirectX::XMMATRIX mView = m_camera.GetViewMatrix();
+    m_cbEveryFrame->data().m_mvp = XMMatrixTranspose(mView * mProj);     // convert row order to column as by default matrix in shader is column order.
+    m_cbEveryFrame->sync(m_context);
     
-    m_context->Draw(3, 0);
+    m_teapot->render(m_context);
 }
 
 void Renderer::renderText(double fTime, 
@@ -159,10 +131,16 @@ void Renderer::renderText(double fTime,
 
 void Renderer::update(double fTime, float fElapsedTime)
 {
+    m_camera.FrameMove(fElapsedTime);
 }
 
 HRESULT Renderer::resize(UINT width, UINT height)
 {
+    float fAspectRatio = (FLOAT)width / (FLOAT)height;
+    m_camera.SetProjParams(DirectX::XM_PI / 4.0f, fAspectRatio, 0.1f, 5000.0f);
+    m_camera.SetWindow(width, height);
+    m_camera.SetButtonMasks(0, MOUSE_WHEEL, MOUSE_LEFT_BUTTON | MOUSE_RIGHT_BUTTON);
+
     return S_OK;
 }
 
@@ -171,5 +149,11 @@ void Renderer::keyboard(UINT c,
                         bool bAltDown)
 {
 }
+    
+LRESULT Renderer::msgproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    m_camera.HandleMessages(hWnd, uMsg, wParam, lParam);
 
-DXF_NAMESPACE_END
+    return 0;
+}
+

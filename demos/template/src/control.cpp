@@ -8,8 +8,6 @@
 
 #include "control.h"
 
-DXF_NAMESPACE_BEGIN
-
 Control::Control()
     : AbstractControl()
 {
@@ -36,4 +34,3 @@ void Control::resize(UINT width, UINT height)
 {
 }
 
-DXF_NAMESPACE_END

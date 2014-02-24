@@ -66,6 +66,21 @@
     <ClInclude Include="..\..\src\DXUT\Optional\SDKmisc.h">
       <Filter>DXUT\Optional</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dxf_model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\glm.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dxf_shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dxf_cbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\dxf_light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -86,6 +101,9 @@
     </Filter>
     <Filter Include="DXUT\Optional">
       <UniqueIdentifier>{315aa082-e87e-4e95-ad0e-ac7b5cec7d53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{46a15f73-c53b-400e-9d38-6906cf3a2cbc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +166,21 @@
     </ClCompile>
     <ClCompile Include="..\..\src\DXUT\Optional\SDKmisc.cpp">
       <Filter>DXUT\Optional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dxf_model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\glm.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dxf_shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dxf_cbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dxf_light.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,9 +10,7 @@
 
 #include <dxf/dxf.h>
 
-DXF_NAMESPACE_BEGIN
-
-class Control : public AbstractControl
+class Control : public dxf::AbstractControl
 {
 public:
     Control();
@@ -25,7 +23,5 @@ public:
 
 private:
 };
-
-DXF_NAMESPACE_END
 
 #endif // !CONTROL_H

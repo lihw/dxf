@@ -15,9 +15,13 @@
     <ClInclude Include="..\..\src\dxf_abstract_control.h" />
     <ClInclude Include="..\..\src\dxf_abstract_renderer.h" />
     <ClInclude Include="..\..\src\dxf_assert.h" />
+    <ClInclude Include="..\..\src\dxf_cbuffer.h" />
     <ClInclude Include="..\..\src\dxf_common.h" />
+    <ClInclude Include="..\..\src\dxf_light.h" />
     <ClInclude Include="..\..\src\dxf_log.h" />
     <ClInclude Include="..\..\src\dxf_main.h" />
+    <ClInclude Include="..\..\src\dxf_model.h" />
+    <ClInclude Include="..\..\src\dxf_shader.h" />
     <ClInclude Include="..\..\src\DXUT\Core\DDSTextureLoader.h" />
     <ClInclude Include="..\..\src\DXUT\Core\dxerr.h" />
     <ClInclude Include="..\..\src\DXUT\Core\DXUT.h" />
@@ -34,13 +38,18 @@
     <ClInclude Include="..\..\src\DXUT\Optional\ImeUi.h" />
     <ClInclude Include="..\..\src\DXUT\Optional\SDKmesh.h" />
     <ClInclude Include="..\..\src\DXUT\Optional\SDKmisc.h" />
+    <ClInclude Include="..\..\src\util\glm.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\dxf_abstract_control.cpp" />
     <ClCompile Include="..\..\src\dxf_abstract_renderer.cpp" />
     <ClCompile Include="..\..\src\dxf_assert.cpp" />
+    <ClCompile Include="..\..\src\dxf_cbuffer.cpp" />
+    <ClCompile Include="..\..\src\dxf_light.cpp" />
     <ClCompile Include="..\..\src\dxf_log.cpp" />
     <ClCompile Include="..\..\src\dxf_main.cpp" />
+    <ClCompile Include="..\..\src\dxf_model.cpp" />
+    <ClCompile Include="..\..\src\dxf_shader.cpp" />
     <ClCompile Include="..\..\src\DXUT\Core\DDSTextureLoader.cpp" />
     <ClCompile Include="..\..\src\DXUT\Core\dxerr.cpp" />
     <ClCompile Include="..\..\src\DXUT\Core\DXUT.cpp" />
@@ -56,6 +65,7 @@
     <ClCompile Include="..\..\src\DXUT\Optional\ImeUi.cpp" />
     <ClCompile Include="..\..\src\DXUT\Optional\SDKmesh.cpp" />
     <ClCompile Include="..\..\src\DXUT\Optional\SDKmisc.cpp" />
+    <ClCompile Include="..\..\src\util\glm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\src\DXUT\Optional\directx.ico" />
@@ -67,7 +77,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

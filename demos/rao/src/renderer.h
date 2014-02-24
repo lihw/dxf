@@ -11,9 +11,7 @@
 
 #include <dxf/dxf.h>
 
-DXF_NAMESPACE_BEGIN
-
-class Renderer : public AbstractRenderer
+class Renderer : public dxf::AbstractRenderer
 {
 public:
     Renderer();
@@ -27,12 +25,24 @@ public:
     virtual void update(double fTime, float fElapsedTime);
     virtual HRESULT resize(UINT width, UINT height);
     virtual void keyboard(UINT c, bool bKeyDown, bool bAltDown);
+    virtual LRESULT msgproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-    bool initializeModels();
-    bool initializeShaders();
+    ID3D11DepthStencilState*           m_dsState;
+    dxf::Model*                        m_teapot;
+    dxf::Shader*                       m_shader;
+    struct CbEveryFrameStruct   
+    {
+        DirectX::XMMATRIX m_mvp;
+    };
+    dxf::CBuffer<CbEveryFrameStruct>*  m_cbEveryFrame;
+    struct CbInitStruct
+    {
+        dxf::DirectionalLight light;
+    };
+    dxf::CBuffer<CbInitStruct>*        m_cbInit;
+    CModelViewerCamera                 m_camera;   
 };
 
-DXF_NAMESPACE_END
 
 #endif // !RENDERER_H
