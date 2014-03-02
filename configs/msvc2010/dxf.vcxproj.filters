@@ -81,6 +81,9 @@
     <ClInclude Include="..\..\src\dxf_light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\util\xyz.h">
+      <Filter>util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\dxf_light.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\xyz.cpp">
+      <Filter>util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -39,6 +39,7 @@
     <ClInclude Include="..\..\src\DXUT\Optional\SDKmesh.h" />
     <ClInclude Include="..\..\src\DXUT\Optional\SDKmisc.h" />
     <ClInclude Include="..\..\src\util\glm.h" />
+    <ClInclude Include="..\..\src\util\xyz.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\dxf_abstract_control.cpp" />
@@ -66,6 +67,7 @@
     <ClCompile Include="..\..\src\DXUT\Optional\SDKmesh.cpp" />
     <ClCompile Include="..\..\src\DXUT\Optional\SDKmisc.cpp" />
     <ClCompile Include="..\..\src\util\glm.cpp" />
+    <ClCompile Include="..\..\src\util\xyz.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\src\DXUT\Optional\directx.ico" />

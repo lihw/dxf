@@ -7,11 +7,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(DXF_ROOT)\include;$(DXF_ROOT)\extern\zlib-1.2.8\include;$(DXF_ROOT)\extern\libjpeg8d\include;$(DXF_ROOT)\extern\libpng-1.4.1\include;$(DXF_ROOT)\extern\assimp-3.0.1270\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DXF_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(DXF_ROOT)\extern\assimp-3.0.1270\lib\assimp_debug-dll_win32;$(DXF_ROOT)\lib;$(DXF_ROOT)\extern\libpng-1.4.1\lib;$(DXF_ROOT)\extern\zlib-1.2.8\lib;$(DXF_ROOT)\extern\libjpeg8d\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXF_ROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>

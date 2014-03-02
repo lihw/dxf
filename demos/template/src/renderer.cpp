@@ -115,7 +115,7 @@ void Renderer::render(double fTime,
 
     m_context->OMSetDepthStencilState(m_dsState, 0);
 
-    DirectX::XMMATRIX mProj = m_camera.GetProjMatrix();
+    DirectX::XMrotyMATRIX mProj = m_camera.GetProjMatrix();
     DirectX::XMMATRIX mView = m_camera.GetViewMatrix();
     m_cbEveryFrame->data().m_mvp = XMMatrixTranspose(mView * mProj);     // convert row order to column as by default matrix in shader is column order.
     m_cbEveryFrame->sync(m_context);

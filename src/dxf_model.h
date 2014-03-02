@@ -25,6 +25,9 @@ public:
     ~Model();
 
     HRESULT loadObj(const char* filename, Shader* shader);
+    HRESULT loadXYZ(const char* filename, Shader* shader);
+    HRESULT loadSphere(Shader* shader);
+
     void render(ID3D11DeviceContext* context);
 
 protected:
