@@ -14,7 +14,7 @@
 #include <vector>
 
 
-XYZModel *readXYZ(const char *filename)
+XYZModel *xyzRead(const char *filename)
 {
     FILE *fp = NULL;
     fp = fopen(filename, "rb");

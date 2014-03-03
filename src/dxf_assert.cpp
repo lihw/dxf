@@ -16,12 +16,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dbghelp.h>
+#include <stdarg.h>
 
 DXF_NAMESPACE_BEGIN
 
 AssertStyleEnum g_assertStyle = DXF_ASSERT_STYLE_DEFAULT;
 
-void DXF_APIENTRY assertFunction(const char* condition, const char* file, int line, const AssertStyleEnum style)
+void DXF_APIENTRY assertInfo(const char* fmt, const char* file, int line, const AssertStyleEnum style, ...)
+{
+    va_list arguments;
+
+    va_start(arguments, style);
+        
+    char text[32767]; 
+    int nchars = vsprintf_s(text, 32767, fmt, arguments);
+
+    return assertBasic(text, file, line, style);
+}
+
+void DXF_APIENTRY assertBasic(const char* condition, const char* file, int line, const AssertStyleEnum style)
 {
     static char buffer[1024];
 
@@ -44,7 +57,8 @@ void DXF_APIENTRY assertFunction(const char* condition, const char* file, int li
             break;
         case DXF_ASSERT_STYLE_POPUP_BOX:
             sprintf_s(buffer, 1024, "Assert: %s\nPosition: %s(%d)\n", condition, file, line);
-            MessageBoxA(NULL, buffer, "Error", MB_YESNO | MB_ICONERROR | MB_TASKMODAL);
+            MessageBoxA(NULL, buffer, "Error", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+            __debugbreak();
             break;
         default:
             // ??

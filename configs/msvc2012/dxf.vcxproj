@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\dxf.h" />
+    <ClInclude Include="..\..\src\dxf_abstract_control.h" />
+    <ClInclude Include="..\..\src\dxf_abstract_renderer.h" />
+    <ClInclude Include="..\..\src\dxf_assert.h" />
+    <ClInclude Include="..\..\src\dxf_cbuffer.h" />
+    <ClInclude Include="..\..\src\dxf_common.h" />
+    <ClInclude Include="..\..\src\dxf_light.h" />
+    <ClInclude Include="..\..\src\dxf_log.h" />
+    <ClInclude Include="..\..\src\dxf_main.h" />
+    <ClInclude Include="..\..\src\dxf_model.h" />
+    <ClInclude Include="..\..\src\dxf_shader.h" />
+    <ClInclude Include="..\..\src\DXUT\Core\DDSTextureLoader.h" />
+    <ClInclude Include="..\..\src\DXUT\Core\dxerr.h" />
+    <ClInclude Include="..\..\src\DXUT\Core\DXUT.h" />
+    <ClInclude Include="..\..\src\DXUT\Core\DXUTDevice11.h" />
+    <ClInclude Include="..\..\src\DXUT\Core\DXUTmisc.h" />
+    <ClInclude Include="..\..\src\DXUT\Core\ScreenGrab.h" />
+    <ClInclude Include="..\..\src\DXUT\Core\WICTextureLoader.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\DXUTcamera.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\DXUTgui.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\DXUTguiIME.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\DXUTLockFreePipe.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\DXUTres.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\DXUTsettingsdlg.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\ImeUi.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\SDKmesh.h" />
+    <ClInclude Include="..\..\src\DXUT\Optional\SDKmisc.h" />
+    <ClInclude Include="..\..\src\util\glm.h" />
+    <ClInclude Include="..\..\src\util\xyz.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\dxf_abstract_control.cpp" />
+    <ClCompile Include="..\..\src\dxf_abstract_renderer.cpp" />
+    <ClCompile Include="..\..\src\dxf_assert.cpp" />
+    <ClCompile Include="..\..\src\dxf_cbuffer.cpp" />
+    <ClCompile Include="..\..\src\dxf_light.cpp" />
+    <ClCompile Include="..\..\src\dxf_log.cpp" />
+    <ClCompile Include="..\..\src\dxf_main.cpp" />
+    <ClCompile Include="..\..\src\dxf_model.cpp" />
+    <ClCompile Include="..\..\src\dxf_shader.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Core\DDSTextureLoader.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Core\dxerr.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Core\DXUT.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Core\DXUTDevice11.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Core\DXUTmisc.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Core\ScreenGrab.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Core\WICTextureLoader.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Optional\DXUTcamera.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Optional\DXUTgui.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Optional\DXUTguiIME.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Optional\DXUTres.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Optional\DXUTsettingsdlg.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Optional\ImeUi.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Optional\SDKmesh.cpp" />
+    <ClCompile Include="..\..\src\DXUT\Optional\SDKmisc.cpp" />
+    <ClCompile Include="..\..\src\util\glm.cpp" />
+    <ClCompile Include="..\..\src\util\xyz.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\src\DXUT\Optional\directx.ico" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8803E663-CF07-4004-8857-83FA16ED5FAC}</ProjectGuid>
+    <Keyword>Qt4VSv1.0</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="engine.props" />
+    <Import Project="dxf.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>..\output;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;QtGuid4.lib;QtOpenGLd4.lib;opengl32.lib;glu32.lib;QtSvgd4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;WIN32;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_OPENGL_LIB;QT_SVG_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtSvg;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtOpenGL4.lib;opengl32.lib;glu32.lib;QtSvg4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties UicDir=".\GeneratedFiles" MocDir=".\GeneratedFiles\$(ConfigurationName)" MocOptions="" RccDir=".\GeneratedFiles" lupdateOnBuild="0" lupdateOptions="" lreleaseOptions="" QtVersion_x0020_Win32="4.8.5" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

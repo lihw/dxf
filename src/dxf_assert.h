@@ -26,7 +26,7 @@ enum AssertStyleEnum
     DXF_ASSERT_STYLE_DEBUG_BREAK,    ///< OutputDebugString + debug break
     DXF_ASSERT_STYLE_DEBUG_INFO,     ///< outputDebugString
 
-    DXF_ASSERT_STYLE_DEFAULT = DXF_ASSERT_STYLE_DEBUG_BREAK,
+    DXF_ASSERT_STYLE_DEFAULT = DXF_ASSERT_STYLE_POPUP_BOX,
 };
 
 //
@@ -35,8 +35,11 @@ enum AssertStyleEnum
 // \param file in which file this assert is triggered.
 // \param line at which line this assert is.
 // \param style how to present this assert to user.
-DXF_EXTERN void DXF_APIENTRY assertFunction(const char* condition, const char* file, int line, 
-        const AssertStyleEnum style);
+DXF_EXTERN void DXF_APIENTRY assertBasic(const char* condition, const char* file, int line, 
+    const AssertStyleEnum style);
+
+DXF_EXTERN void DXF_APIENTRY assertInfo(const char* fmt, const char* file, int line, 
+    const AssertStyleEnum style, ...);
 
 DXF_EXTERN AssertStyleEnum g_assertStyle;
 
@@ -49,23 +52,23 @@ DXF_EXTERN void DXF_APIENTRY assertSetStyle(AssertStyleEnum style);
 { \
     if (!(condition)) \
     { \
-        dxf::assertFunction((#condition), __FILE__, __LINE__, dxf::g_assertStyle); \
+        dxf::assertBasic((#condition), __FILE__, __LINE__, dxf::g_assertStyle); \
     } \
 }
 
-#define DXF_ASSERT_INFO(condition, text) \
+#define DXF_ASSERT_INFO(condition, fmt, ...) \
 { \
     if (!(condition)) \
     { \
-        dxf::assertFunction(text, __FILE__, __LINE__, dxf::g_assertStyle); \
+        dxf::assertInfo(fmt, __FILE__, __LINE__, dxf::g_assertStyle, __VA_ARGS__); \
     } \
 }
 
 #define DXF_ASSERT_NOT_REACHABLE() \
-    dxf::assertFunction("should not reach here", __FILE__, __LINE__, dxf::g_assertStyle); 
+    dxf::assertBasic("Should not reach here!", __FILE__, __LINE__, dxf::g_assertStyle); 
 
 #define DXF_ASSERT_NOT_IMPLEMENTED() \
-    dxf::assertFunction("not implemented", __FILE__, __LINE__, dxf::g_assertStyle); 
+    dxf::assertBasic("Not implemented!", __FILE__, __LINE__, dxf::g_assertStyle); 
 
 #else
 

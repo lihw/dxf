@@ -12,6 +12,7 @@
 #include "dxf_shader.h"
 
 #include "dxf_assert.h"
+#include "dxf_log.h"
 #include "dxut/core/dxut.h"
 
 DXF_NAMESPACE_BEGIN
@@ -66,8 +67,14 @@ HRESULT Shader::addVSShader(LPCWSTR vsShaderFile, LPCSTR mainEntry)
                             0, 
                             &pShaderBlob, 
                             &pErrorBlob);
-    if (FAILED(hr))
+    if (hr == 0x80070002)
     {
+        DXF_LOGERROR("%s not found", vsShaderFile);
+        DXF_ASSERT_INFO(0, "Source file (%s) not found!", vsShaderFile);
+    }
+    else if (FAILED(hr))
+    {
+        DXF_ASSERT_INFO(0, (char*)pErrorBlob->GetBufferPointer());
         OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
         SAFE_RELEASE(pErrorBlob);
         return hr;

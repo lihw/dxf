@@ -260,38 +260,38 @@ HRESULT Model::loadXYZ(const char* filename, Shader* shader)
     return S_OK;
 }
 
-HRESULT Model::loadSphere(Shader* shader)
+HRESULT Model::loadSphere(UINT numSegments, UINT numRings, Shader* shader)
 {
     m_topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-#define RING_NUMBER 16
-#define SEGMENT_NUMBER 32
-    
     // -------------------------------------------------------------- 
     // Create the sphere vertex and index buffer
     // -------------------------------------------------------------- 
-    UINT numVertices = (RING_NUMBER + 1) * (SEGMENT_NUMBER + 1);
-    UINT numIndices = 6 * RING_NUMBER * (SEGMENT_NUMBER + 1);
+    UINT numVertices = (numRings + 1) * (numSegments + 1);
+    UINT numIndices = 6 * numRings * (numSegments + 1);
 
     m_vertices = new float [numVertices * 8];
-    m_indices = new UINT [numIndices]; 
+    m_indices = new UINT [numIndices];
+
+    m_numVertices = numVertices;
+    m_numIndices = numIndices;
 
     float *pVertex = m_vertices;
     UINT *pIndex = m_indices;
 
-    float deltaRingAngle = PI / RING_NUMBER;
-    float deltaSegAngle = (2.0f * PI / SEGMENT_NUMBER);
+    float deltaRingAngle = DirectX::XM_PI / numRings;
+    float deltaSegAngle = (2.0f * DirectX::XM_PI / numSegments);
 
     UINT verticeIndex = 0;
 
     // Generate the group of rings for the sphere
-    for (UINT ring = 0; ring <= RING_NUMBER; ++ring) 
+    for (UINT ring = 0; ring <= numRings; ++ring) 
     {
         float r0 = sinf(ring * deltaRingAngle);
         float y0 = cosf(ring * deltaRingAngle);
 
         // Generate the group of segments for the current ring
-        for(UINT seg = 0; seg <= SEGMENT_NUMBER; seg++) 
+        for(UINT seg = 0; seg <= numSegments; seg++) 
         {
             float x0 = r0 * sinf(seg * deltaSegAngle);
             float z0 = r0 * cosf(seg * deltaSegAngle);
@@ -304,24 +304,27 @@ HRESULT Model::loadSphere(Shader* shader)
             *pVertex++ = z0;
 
             // Normal
-            float n[] = {x0, y0, z0};
-            pVector3Normalize(n, pVertex);
-            pVertex += 3;
-            
-            // Texture coordinate
-            *pVertex++ = (float)seg / (float)SEGMENT_NUMBER;
-            *pVertex++ = (float)ring / (float)RING_NUMBER;
+            DirectX::XMVECTOR n = DirectX::XMVector3Normalize(DirectX::XMVectorSet(x0, y0, z0, 1.0f)); 
+            *pVertex++ = DirectX::XMVectorGetX(n);
+            *pVertex++ = DirectX::XMVectorGetY(n);
+            *pVertex++ = DirectX::XMVectorGetZ(n);
 
-            if (ring != RING_NUMBER) 
+            // Texture coordinate
+            *pVertex++ = (float)seg / (float)numSegments;
+            *pVertex++ = (float)ring / (float)numRings;
+
+            if (ring != numRings) 
             {
                 // each vertex (except the last) has six indices pointing to it
-                *pIndex++ = verticeIndex + SEGMENT_NUMBER + 1;
+                *pIndex++ = verticeIndex + numSegments + 1;
+                *pIndex++ = verticeIndex + numSegments;
                 *pIndex++ = verticeIndex;               
-                *pIndex++ = verticeIndex + SEGMENT_NUMBER;
-                *pIndex++ = verticeIndex + SEGMENT_NUMBER + 1;
-                *pIndex++ = verticeIndex + 1;
+
+                *pIndex++ = verticeIndex + numSegments + 1;
                 *pIndex++ = verticeIndex;
-                verticeIndex ++;
+                *pIndex++ = verticeIndex + 1;
+
+                verticeIndex++;
             }
         } // end for seg
     } // end for ring
@@ -370,9 +373,6 @@ HRESULT Model::loadSphere(Shader* shader)
     }
 
     DXUT_SetDebugName(m_vertexLayout, "sphere");
-
-#undef RING_NUMBER
-#undef SEGMENT_NUMBER
 
     return S_OK;
 }
