@@ -21,6 +21,7 @@ Renderer::Renderer()
     m_points = NULL;
     m_cbInit = NULL;
     m_cbEveryFrame = NULL;
+    m_cbEveryFrame2 = NULL;
 }
 
 Renderer::~Renderer()
@@ -45,6 +46,7 @@ HRESULT Renderer::initialize(ID3D11Device* device,
 
     m_pointsShader = new dxf::Shader(m_device);
     V_RETURN(m_pointsShader->addVSShader(SHADER_ROOT L"/points.hlsl", "VS"));
+    V_RETURN(m_pointsShader->addGSShader(SHADER_ROOT L"/points.hlsl", "GS"));
     V_RETURN(m_pointsShader->addPSShader(SHADER_ROOT L"/points.hlsl", "PS"));
 #undef SHADER_ROOT 
 
@@ -64,6 +66,9 @@ HRESULT Renderer::initialize(ID3D11Device* device,
     //
     m_cbEveryFrame = new dxf::CBuffer<CbEveryFrameStruct>(m_device);
     V_RETURN(m_cbEveryFrame->create(m_context, "cb-everyframe", "vs", 0));
+
+    m_cbEveryFrame2 = new dxf::CBuffer<CbEveryFrameStruct2>(m_device);
+    V_RETURN(m_cbEveryFrame2->create(m_context, "cb-everyframe2", "vs", 0));
     
     m_cbInit = new dxf::CBuffer<CbInitStruct>(m_device);
     V_RETURN(m_cbInit->create(m_context, "cb-init", "vs", 1));
@@ -130,13 +135,11 @@ void Renderer::render(double fTime,
     DirectX::XMMATRIX mView = m_camera.GetViewMatrix();
     m_cbEveryFrame->data().m_mvp = XMMatrixTranspose(mView * mProj);     // convert row order to column as by default matrix in shader is column order.
     m_cbEveryFrame->sync(m_context);
-
     m_sphere->render(m_context);
 
-    
-    DirectX::XMMATRIX mOffset = DirectX::XMMatrixTranslation(0, 0, 0.01f);
-    m_cbEveryFrame->data().m_mvp = XMMatrixTranspose(mView * mOffset * mProj);     
-    m_cbEveryFrame->sync(m_context);
+    m_cbEveryFrame2->data().m_projection = mProj;
+    m_cbEveryFrame2->data().m_cameraView = mView;
+    m_cbEveryFrame2->sync(m_context);
     
     m_points->render(m_context);
 }

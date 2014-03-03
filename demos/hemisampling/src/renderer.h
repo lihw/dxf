@@ -38,6 +38,12 @@ private:
         DirectX::XMMATRIX m_mvp;
     };
     dxf::CBuffer<CbEveryFrameStruct>*  m_cbEveryFrame;
+    struct CbEveryFrameStruct2
+    {
+        DirectX::XMMATRIX m_cameraView;
+        DirectX::XMMATRIX m_projection;
+    };
+    dxf::CBuffer<CbEveryFrameStruct2>* m_cbEveryFrame2;
     struct CbInitStruct
     {
         dxf::DirectionalLight light;
