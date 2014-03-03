@@ -42,6 +42,10 @@ HRESULT Renderer::initialize(ID3D11Device* device,
     m_sphereShader = new dxf::Shader(m_device);
     V_RETURN(m_sphereShader->addVSShader(SHADER_ROOT L"/hemisphere.hlsl", "VS"));
     V_RETURN(m_sphereShader->addPSShader(SHADER_ROOT L"/hemisphere.hlsl", "PS"));
+
+    m_pointsShader = new dxf::Shader(m_device);
+    V_RETURN(m_pointsShader->addVSShader(SHADER_ROOT L"/points.hlsl", "VS"));
+    V_RETURN(m_pointsShader->addPSShader(SHADER_ROOT L"/points.hlsl", "PS"));
 #undef SHADER_ROOT 
 
     //
@@ -50,8 +54,9 @@ HRESULT Renderer::initialize(ID3D11Device* device,
 #define MODEL_ROOT "../demos/hemisampling/media/models"
     m_sphere = new dxf::Model(m_device);
     V_RETURN(m_sphere->loadSphere(64, 32, m_sphereShader));
-    //m_points = new dxf::Model(m_device);
-    //V_RETURN(m_points->loadXYZ(MODEL_ROOT"/points.xyz", m_pointsShader));
+
+    m_points = new dxf::Model(m_device);
+    V_RETURN(m_points->loadXYZ(MODEL_ROOT"/points.xyz", m_pointsShader));
 #undef MODEL_ROOT
 
     //
@@ -125,8 +130,15 @@ void Renderer::render(double fTime,
     DirectX::XMMATRIX mView = m_camera.GetViewMatrix();
     m_cbEveryFrame->data().m_mvp = XMMatrixTranspose(mView * mProj);     // convert row order to column as by default matrix in shader is column order.
     m_cbEveryFrame->sync(m_context);
-    
+
     m_sphere->render(m_context);
+
+    
+    DirectX::XMMATRIX mOffset = DirectX::XMMatrixTranslation(0, 0, 0.01f);
+    m_cbEveryFrame->data().m_mvp = XMMatrixTranspose(mView * mOffset * mProj);     
+    m_cbEveryFrame->sync(m_context);
+    
+    m_points->render(m_context);
 }
 
 void Renderer::renderText(double fTime, 

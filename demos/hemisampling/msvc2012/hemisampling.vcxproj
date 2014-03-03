@@ -20,7 +20,10 @@
     <ClInclude Include="..\src\renderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\media\shaders\simple.hlsl">
+    <FxCompile Include="..\media\shaders\hemisphere.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\media\shaders\points.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>

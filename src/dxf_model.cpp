@@ -392,7 +392,7 @@ void Model::render(ID3D11DeviceContext* context)
     }
     else
     {
-        context->Draw(0, 0);
+        context->Draw(m_numVertices, 0);
     }
 }
 

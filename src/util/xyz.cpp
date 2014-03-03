@@ -68,7 +68,7 @@ XYZModel *xyzRead(const char *filename)
 
     model->vertices = new float [vertices.size()];
     memcpy(model->vertices, &vertices[0], sizeof(float) * vertices.size());
-    if (normals.size() == 0)
+    if (normals.size() != 0)
     {
         model->normals = new float [normals.size()];
         memcpy(model->normals, &normals[0], sizeof(float) * normals.size());

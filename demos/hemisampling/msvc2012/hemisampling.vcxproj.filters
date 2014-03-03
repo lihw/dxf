@@ -34,4 +34,12 @@
       <UniqueIdentifier>{6d42159e-a9f3-4b57-8b5c-bf71d27b7e33}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\media\shaders\hemisphere.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\media\shaders\points.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>
