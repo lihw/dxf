@@ -36,10 +36,9 @@ PS_INPUT VS(VS_INPUT input)
     PS_INPUT output = (PS_INPUT)0;
    
     output.Pos = mul(float4(input.Pos, 1.0f), MVP);
-    float nDotL = dot(normalize(-LightDirection), normalize(input.Normal));
-    //float3 n = normalize(input.Normal) * 0.5f + float3(0.5f, 0.5f, 0.5f);
-    //output.Color = float4(1, 1, 0, 1.0f);
-    output.Color = nDotL * Diffuse + Ambient;
+    float3 n = normalize(input.Normal);
+    float nDotL = max(dot(normalize(-LightDirection), n), 0);
+    output.Color =nDotL * Diffuse + Ambient;
     output.Clip = input.Pos.y;
     return output;
 }
@@ -50,4 +49,5 @@ PS_INPUT VS(VS_INPUT input)
 float4 PS(PS_INPUT input) : SV_TARGET
 {
     return float4(input.Color.rgb, 1.0); 
+    //return float4(0.25f, 0.25f, 0.0f, 0.0); 
 }

@@ -29,6 +29,7 @@ public:
 
 private:
     ID3D11DepthStencilState*           m_dsState;
+    ID3D11BlendState*                  m_blendState;
     dxf::Model*                        m_sphere;
     dxf::Model*                        m_points;
     dxf::Shader*                       m_sphereShader;
@@ -49,7 +50,8 @@ private:
         dxf::DirectionalLight light;
     };
     dxf::CBuffer<CbInitStruct>*        m_cbInit;
-    CModelViewerCamera                 m_camera;   
+    CModelViewerCamera                 m_camera; 
+    bool                               m_showPoints;
 };
 
 

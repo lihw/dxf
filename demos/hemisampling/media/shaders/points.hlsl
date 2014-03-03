@@ -33,23 +33,23 @@ GS_INPUT VS(VS_INPUT input)
 //--------------------------------------------------------------------------------------
 // Geometry Shader
 //--------------------------------------------------------------------------------------
-[maxvertexcount(8)]
-void mainGS( point GS_INPUT input, inout TriangleStream<PS_INPUT> output )
+[maxvertexcount(4)]
+void GS( point GS_INPUT input[1], inout TriangleStream<PS_INPUT> output )
 {
-    PS_INPUT output = (PS_INPUT)0;
+    PS_INPUT psInput = (PS_INPUT)0;
    
     // Expand the point to a small quad
-    float4 p = mul(float4(input.Pos, 1.0), CameraView);
+    float4 p = mul(float4(input[0].Pos, 1.0), CameraView);
     
     // front face
     //  p2 --- p3 
     //  |      |
     //  |      |
     //  p0 --- p1 
-    float4 p0 = p + float4(-0.01, -0.01f, 0.001, 0);
-    float4 p1 = p + float4( 0.01, -0.01f, 0.001, 0);
-    float4 p2 = p + float4(-0.01,  0.01f, 0.001, 0);
-    float4 p3 = p + float4( 0.01,  0.01f, 0.001, 0);
+    float4 p0 = p + float4(-0.01, -0.01f, -0.01, 0);
+    float4 p1 = p + float4( 0.01, -0.01f, -0.01, 0);
+    float4 p2 = p + float4(-0.01,  0.01f, -0.01, 0);
+    float4 p3 = p + float4( 0.01,  0.01f, -0.01, 0);
     
     psInput.Pos  = mul(p0, Projection);
     output.Append(psInput);

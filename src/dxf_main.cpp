@@ -226,6 +226,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     dxf::GlobalProperties properties;
     dxf::fillProperties(&properties);
 
+    DXUTSetIsInGammaCorrectMode(false); 
 
     DXUTSetCallbackD3D11DeviceAcceptable(IsD3D11DeviceAcceptable);
     DXUTSetCallbackD3D11DeviceCreated(OnD3D11CreateDevice);

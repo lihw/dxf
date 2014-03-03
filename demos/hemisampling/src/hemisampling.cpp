@@ -14,7 +14,7 @@ DXF_NAMESPACE_BEGIN
 
 void DXF_APIENTRY fillProperties(GlobalProperties* properties)
 {
-    properties->width  = 1024;
+    properties->width  = 768;
     properties->height = 768;
     properties->applicationName = L"display-hemisphere-sampling";
 }

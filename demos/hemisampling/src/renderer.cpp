@@ -22,6 +22,7 @@ Renderer::Renderer()
     m_cbInit = NULL;
     m_cbEveryFrame = NULL;
     m_cbEveryFrame2 = NULL;
+    m_showPoints = true;
 }
 
 Renderer::~Renderer()
@@ -68,14 +69,14 @@ HRESULT Renderer::initialize(ID3D11Device* device,
     V_RETURN(m_cbEveryFrame->create(m_context, "cb-everyframe", "vs", 0));
 
     m_cbEveryFrame2 = new dxf::CBuffer<CbEveryFrameStruct2>(m_device);
-    V_RETURN(m_cbEveryFrame2->create(m_context, "cb-everyframe2", "vs", 0));
+    V_RETURN(m_cbEveryFrame2->create(m_context, "cb-everyframe2", "gs", 0));
     
     m_cbInit = new dxf::CBuffer<CbInitStruct>(m_device);
     V_RETURN(m_cbInit->create(m_context, "cb-init", "vs", 1));
 
-    m_cbInit->data().light.position = DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f);
-    m_cbInit->data().light.ambient  = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-    m_cbInit->data().light.diffuse  = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+    m_cbInit->data().light.position = DirectX::XMFLOAT3(0.5f, -1.0f, -0.3f);
+    m_cbInit->data().light.ambient  = DirectX::XMFLOAT4(245.0f / 255.0f, 127.0f / 255.0f, 128.0f / 255.0f, 1.0f);
+    m_cbInit->data().light.diffuse  = DirectX::XMFLOAT4(80.0f / 255.0f, 80.0f / 255.0f, 80.0f / 255.0f, 1.0f);
     m_cbInit->data().light.specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
     m_cbInit->sync(m_context);
 
@@ -101,6 +102,12 @@ HRESULT Renderer::initialize(ID3D11Device* device,
     dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
     m_device->CreateDepthStencilState(&dsDesc, &m_dsState);
+
+    D3D11_BLEND_DESC blendDesc;
+    ZeroMemory(&blendDesc, sizeof(blendDesc));
+    blendDesc.RenderTarget[0].BlendEnable = false;
+    m_device->CreateBlendState(&blendDesc, &m_blendState);
+
     
     return S_OK;
 }
@@ -112,7 +119,9 @@ void Renderer::uninitialize()
     SAFE_DELETE(m_sphereShader);
     SAFE_DELETE(m_pointsShader);
     SAFE_RELEASE(m_dsState);
+    SAFE_RELEASE(m_blendState);
     SAFE_DELETE(m_cbEveryFrame);
+    SAFE_DELETE(m_cbEveryFrame2);
     SAFE_DELETE(m_cbInit);
 }
 
@@ -120,7 +129,8 @@ void Renderer::render(double fTime,
                       float fElapsedTime)
 {
     // Clear the back buffer 
-    float ClearColor[4] = {0.0f, 0.125f, 0.3f, 1.0f}; // red,green,blue,alpha
+    float ClearColor[4] = {0.0f, 0.125f, 0.3f, 0.0f}; // red,green,blue,alpha
+    //float ClearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f}; // red,green,blue,alpha
     ID3D11RenderTargetView* pRTV = DXUTGetD3D11RenderTargetView();
     m_context->ClearRenderTargetView(pRTV, ClearColor);
 
@@ -130,6 +140,7 @@ void Renderer::render(double fTime,
     m_sphereShader->bind(m_context);
 
     m_context->OMSetDepthStencilState(m_dsState, 0);
+    m_context->OMSetBlendState(0, 0, 0xffffffff);
 
     DirectX::XMMATRIX mProj = m_camera.GetProjMatrix();
     DirectX::XMMATRIX mView = m_camera.GetViewMatrix();
@@ -137,11 +148,16 @@ void Renderer::render(double fTime,
     m_cbEveryFrame->sync(m_context);
     m_sphere->render(m_context);
 
-    m_cbEveryFrame2->data().m_projection = mProj;
-    m_cbEveryFrame2->data().m_cameraView = mView;
-    m_cbEveryFrame2->sync(m_context);
+    if (m_showPoints)
+    {
+        m_pointsShader->bind(m_context);
+
+        m_cbEveryFrame2->data().m_projection = XMMatrixTranspose(mProj);
+        m_cbEveryFrame2->data().m_cameraView = XMMatrixTranspose(mView);
+        m_cbEveryFrame2->sync(m_context);
     
-    m_points->render(m_context);
+        m_points->render(m_context);
+    }
 }
 
 void Renderer::renderText(double fTime, 
@@ -169,6 +185,10 @@ void Renderer::keyboard(UINT c,
                         bool bKeyDown, 
                         bool bAltDown)
 {
+    if (c == 80 && bKeyDown)
+    {
+        m_showPoints = !m_showPoints;
+    }
 }
     
 LRESULT Renderer::msgproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

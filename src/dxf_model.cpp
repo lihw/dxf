@@ -316,12 +316,12 @@ HRESULT Model::loadSphere(UINT numSegments, UINT numRings, Shader* shader)
             if (ring != numRings) 
             {
                 // each vertex (except the last) has six indices pointing to it
-                *pIndex++ = verticeIndex + numSegments + 1;
                 *pIndex++ = verticeIndex + numSegments;
+                *pIndex++ = verticeIndex + numSegments + 1;
                 *pIndex++ = verticeIndex;               
 
-                *pIndex++ = verticeIndex + numSegments + 1;
                 *pIndex++ = verticeIndex;
+                *pIndex++ = verticeIndex + numSegments + 1;
                 *pIndex++ = verticeIndex + 1;
 
                 verticeIndex++;
