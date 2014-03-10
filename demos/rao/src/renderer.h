@@ -29,18 +29,19 @@ public:
 
 private:
     ID3D11DepthStencilState*           m_dsState;
-    dxf::Model*                        m_teapot;
-    dxf::Shader*                       m_shader;
+    dxf::Model*                        m_mesh;
+
+    //
+    // Pre-pass
+    //
+    dxf::Shader*                       m_prepass;
     struct CbEveryFrameStruct   
     {
         DirectX::XMMATRIX m_mvp;
     };
     dxf::CBuffer<CbEveryFrameStruct>*  m_cbEveryFrame;
-    struct CbInitStruct
-    {
-        dxf::DirectionalLight light;
-    };
-    dxf::CBuffer<CbInitStruct>*        m_cbInit;
+    dxf::FrameBuffer*                  m_framebuffer;
+
     CModelViewerCamera                 m_camera;   
 };
 

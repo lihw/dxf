@@ -38,8 +38,8 @@ HRESULT Renderer::initialize(ID3D11Device* device,
     //
 #define SHADER_ROOT L"../demos/rao/media/shaders"
     m_shader = new dxf::Shader(m_device);
-    V_RETURN(m_shader->addVSShader(SHADER_ROOT L"/simple.hlsl", "VS"));
-    V_RETURN(m_shader->addPSShader(SHADER_ROOT L"/simple.hlsl", "PS"));
+    V_RETURN(m_shader->addVSShader(SHADER_ROOT L"/prepass.hlsl", "VS"));
+    V_RETURN(m_shader->addPSShader(SHADER_ROOT L"/prepass.hlsl", "PS"));
 #undef SHADER_ROOT 
 
     //
@@ -56,15 +56,6 @@ HRESULT Renderer::initialize(ID3D11Device* device,
     m_cbEveryFrame = new dxf::CBuffer<CbEveryFrameStruct>(m_device);
     V_RETURN(m_cbEveryFrame->create(m_context, "cb-everyframe", "vs", 0));
     
-    m_cbInit = new dxf::CBuffer<CbInitStruct>(m_device);
-    V_RETURN(m_cbInit->create(m_context, "cb-init", "vs", 1));
-
-    m_cbInit->data().light.position = DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f);
-    m_cbInit->data().light.ambient  = DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-    m_cbInit->data().light.diffuse  = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-    m_cbInit->data().light.specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-    m_cbInit->sync(m_context);
-
 
     //
     // Camera
@@ -97,7 +88,6 @@ void Renderer::uninitialize()
     SAFE_DELETE(m_shader);
     SAFE_RELEASE(m_dsState);
     SAFE_DELETE(m_cbEveryFrame);
-    SAFE_DELETE(m_cbInit);
 }
 
 void Renderer::render(double fTime, 
