@@ -84,6 +84,9 @@
     <ClInclude Include="..\..\src\util\xyz.h">
       <Filter>util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dxf_framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\dxf_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -190,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\util\xyz.cpp">
       <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dxf_framebuffer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\dxf_texture.cpp">
       <Filter>Source Files</Filter>

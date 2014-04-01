@@ -11,6 +11,7 @@
 #include "dxf_main.h"
 #include "dxf_model.h"
 #include "dxf_shader.h"
+#include "dxf_framebuffer.h"
 #include "dxf_cbuffer.h"
 #include "dxf_light.h"
 #include "dxf_texture.h"
