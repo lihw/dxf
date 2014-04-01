@@ -13,5 +13,6 @@
 #include "dxf_shader.h"
 #include "dxf_cbuffer.h"
 #include "dxf_light.h"
+#include "dxf_texture.h"
 #include "dxf_abstract_renderer.h"
 #include "dxf_abstract_control.h"

@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\src\dxf_main.h" />
     <ClInclude Include="..\..\src\dxf_model.h" />
     <ClInclude Include="..\..\src\dxf_shader.h" />
+    <ClInclude Include="..\..\src\dxf_texture.h" />
     <ClInclude Include="..\..\src\DXUT\Core\DDSTextureLoader.h" />
     <ClInclude Include="..\..\src\DXUT\Core\dxerr.h" />
     <ClInclude Include="..\..\src\DXUT\Core\DXUT.h" />
@@ -51,6 +52,7 @@
     <ClCompile Include="..\..\src\dxf_main.cpp" />
     <ClCompile Include="..\..\src\dxf_model.cpp" />
     <ClCompile Include="..\..\src\dxf_shader.cpp" />
+    <ClCompile Include="..\..\src\dxf_texture.cpp" />
     <ClCompile Include="..\..\src\DXUT\Core\DDSTextureLoader.cpp" />
     <ClCompile Include="..\..\src\DXUT\Core\dxerr.cpp" />
     <ClCompile Include="..\..\src\DXUT\Core\DXUT.cpp" />
@@ -105,7 +107,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>UNICODE;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\external\directxtex\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>

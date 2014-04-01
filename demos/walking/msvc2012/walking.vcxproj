@@ -12,15 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\control.cpp" />
+    <ClCompile Include="..\src\ground.cpp" />
     <ClCompile Include="..\src\renderer.cpp" />
-    <ClCompile Include="..\src\template.cpp" />
+    <ClCompile Include="..\src\walking.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\control.h" />
+    <ClInclude Include="..\src\ground.h" />
     <ClInclude Include="..\src\renderer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\media\shaders\template.hlsl" />
+    <ClInclude Include="..\src\walking.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{58CFFED7-2580-43C3-9CAF-91BA45BC31BC}</ProjectGuid>
@@ -67,6 +67,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXF_ROOT)\lib;$(DXF_ROOT)\external\directxtex\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

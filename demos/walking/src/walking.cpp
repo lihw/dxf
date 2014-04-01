@@ -1,4 +1,4 @@
-// rao.cpp
+// walking.cpp
 //
 // Created at 2014/02/20
 //
@@ -16,7 +16,7 @@ void DXF_APIENTRY fillProperties(GlobalProperties* properties)
 {
     properties->width  = 1024;
     properties->height = 768;
-    properties->applicationName = L"raycasting-ambient-occlusion";
+    properties->applicationName = L"walking";
 }
 
 AbstractRenderer* DXF_APIENTRY createRenderer()

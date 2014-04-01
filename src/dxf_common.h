@@ -24,12 +24,7 @@
 
 #define DXF_UNUSED_ARGUMENT(p) ((void)p)
 
-#if defined _MSC_VER || defined _WIN32
-# define DXF_WIN32
 # include <Windows.h>
-#else
-# error "DXFramework supports win32 only"
-#endif
 
 
 // 
@@ -41,8 +36,6 @@
 #include <d3dcompiler.h>
 
 
-#if defined DXF_WIN32
-
 #define DXF_DLLEXPORT 
 #define DXF_INLINE __forceinline
 #define DXF_EXTERN extern
@@ -50,7 +43,15 @@
 #define DXF_APIENTRY __stdcall
 #define DXF_CCONV __cdecl
 
-#endif // DXF_WIN32
+enum ShaderBit
+{
+    VERTEX_SHADER_BIT = 0x01,
+    PIXEL_SHADER_BIT = 0x02,
+    HULL_SHADER_BIT = 0x04,
+    DOMAIN_SHADER_BIT = 0x08,
+    GEOMETRY_SHADER_BIT = 0x10,
+    COMPUTE_SHADER_BIT = 0x020,
+};
 
 #endif // !DXF_COMMON_H
 

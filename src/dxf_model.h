@@ -27,8 +27,12 @@ public:
     HRESULT loadObj(const char* filename, Shader* shader);
     HRESULT loadXYZ(const char* filename, Shader* shader);
     HRESULT loadSphere(UINT numSegments, UINT numRings, Shader* shader);
+    HRESULT loadPlane(float w, float h, Shader* shader);
+    // A convex polgyon on the xz plane
+    HRESULT loadPolygonXZ(const float* points, UINT numPoints, Shader* shader);
 
     void render(ID3D11DeviceContext* context);
+	void render(ID3D11DeviceContext* context, UINT count);
 
 protected:
     bool createVertexBuffer(ID3D11Device *device);

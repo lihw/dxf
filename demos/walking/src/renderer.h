@@ -11,6 +11,8 @@
 
 #include <dxf/dxf.h>
 
+#include "ground.h"
+
 class Renderer : public dxf::AbstractRenderer
 {
 public:
@@ -28,20 +30,36 @@ public:
     virtual LRESULT msgproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
+    void walk(float distance);
+    void turn(float angle);
+    void updateCamera();
+
+private:
     ID3D11DepthStencilState*           m_dsState;
-    dxf::Model*                        m_teapot;
-    dxf::Shader*                       m_shader;
+    //dxf::Model*                        m_ground;
+    dxf::Model*                        m_spotlight;
+    dxf::Shader*                       m_groundShader;
+    dxf::Shader*                       m_spotlightShader;
+
     struct CbEveryFrameStruct   
     {
         DirectX::XMMATRIX m_mvp;
     };
     dxf::CBuffer<CbEveryFrameStruct>*  m_cbEveryFrame;
-    struct CbInitStruct
-    {
-        dxf::DirectionalLight light;
-    };
-    dxf::CBuffer<CbInitStruct>*        m_cbInit;
     CModelViewerCamera                 m_camera;   
+	ID3D11BlendState*                  m_blend;
+
+    DirectX::XMFLOAT3      m_position;
+	DirectX::XMFLOAT3      m_direction;
+    float                  m_angle;
+
+	enum 
+	{
+		FIRST_PERSON,
+		THIRD_PERSON,
+	} m_mode;
+
+    Ground* m_ground;
 };
 
 

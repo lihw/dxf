@@ -377,6 +377,149 @@ HRESULT Model::loadSphere(UINT numSegments, UINT numRings, Shader* shader)
     return S_OK;
 }
 
+HRESULT Model::loadPlane(float w, float h, Shader* shader)
+{
+    m_topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    
+    float vertices[] =
+    {
+        w * 0.5f, 0.0f, h * 0.5f, 0, 1.0f, 0.0f, 0.0f, 0.0f,
+        -w * 0.5f, 0.0f, h * 0.5f, 0, 1.0f, 0.0f, 1.0f, 0.0f,
+        -w * 0.5f, 0.0f, -h * 0.5f, 0, 1.0f, 0.0f, 1.0f, 1.0f,
+        w * 0.5f, 0.0f, -h * 0.5f, 0, 1.0f, 0.0f, 0.0f, 1.0f,
+    };
+
+    UINT indices[] = 
+    {
+        0, 3, 1,
+        1, 3, 2,
+    };
+
+	m_numVertices = 4;
+	m_numIndices = 6;
+
+    m_vertices = new float [4 * 8];
+    m_indices = new UINT [6];
+
+    memcpy(m_vertices, vertices, sizeof(float) * 32);
+    memcpy(m_indices, indices, sizeof(UINT) * 6);
+
+    // Position
+    D3D11_INPUT_ELEMENT_DESC vertexElements[3]; 
+
+    vertexElements[0].SemanticName         = "POSITION";
+    vertexElements[0].SemanticIndex        = 0;
+    vertexElements[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+    vertexElements[0].InputSlot            = 0;
+    vertexElements[0].AlignedByteOffset    = 0;
+    vertexElements[0].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+    vertexElements[0].InstanceDataStepRate = 0;
+
+    vertexElements[1].SemanticName         = "NORMAL";
+    vertexElements[1].SemanticIndex        = 0;
+    vertexElements[1].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+    vertexElements[1].InputSlot            = 0;
+    vertexElements[1].AlignedByteOffset    = 12;
+    vertexElements[1].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+    vertexElements[1].InstanceDataStepRate = 0;
+
+    vertexElements[2].SemanticName         = "TEXCOORD";
+    vertexElements[2].SemanticIndex        = 0;
+    vertexElements[2].Format               = DXGI_FORMAT_R32G32_FLOAT;
+    vertexElements[2].InputSlot            = 0;
+    vertexElements[2].AlignedByteOffset    = 24;
+    vertexElements[2].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+    vertexElements[2].InstanceDataStepRate = 0;
+
+    m_stride = 32;
+
+    if (!createVertexBuffer(m_device))
+    {
+        return S_FALSE;
+    }
+
+    if (FAILED(m_device->CreateInputLayout(vertexElements, 
+                    3,
+                    shader->vertexShaderBlob()->GetBufferPointer(), 
+                    shader->vertexShaderBlob()->GetBufferSize(), 
+                    &m_vertexLayout)))
+    {
+        return false;
+    }
+
+    DXUT_SetDebugName(m_vertexLayout, "plane");
+
+    return S_OK;
+}
+    
+HRESULT Model::loadPolygonXZ(const float* points, UINT numPoints, Shader* shader)
+{
+    m_topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    
+	m_numVertices = numPoints;
+	m_numIndices = (numPoints - 2) * 3;
+
+    m_vertices = new float [numPoints * 6];
+    m_indices = new UINT [m_numIndices];
+
+    for (UINT i = 0; i < m_numVertices; ++i)
+    {
+        m_vertices[i * 6 + 0] = points[i * 3];
+        m_vertices[i * 6 + 1] = points[i * 3 + 1];
+        m_vertices[i * 6 + 2] = points[i * 3 + 2];
+        
+        m_vertices[i * 6 + 3] = 0;
+        m_vertices[i * 6 + 4] = 1;
+        m_vertices[i * 6 + 5] = 0;
+    }
+
+    for (UINT i = 0; i < numPoints - 2; ++i)
+    {
+        m_indices[i * 3] = 0;
+        m_indices[i * 3 + 1] = i + 1;
+        m_indices[i * 3 + 2] = i + 2;
+    }
+
+    // Position
+    D3D11_INPUT_ELEMENT_DESC vertexElements[2]; 
+
+    vertexElements[0].SemanticName         = "POSITION";
+    vertexElements[0].SemanticIndex        = 0;
+    vertexElements[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+    vertexElements[0].InputSlot            = 0;
+    vertexElements[0].AlignedByteOffset    = 0;
+    vertexElements[0].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+    vertexElements[0].InstanceDataStepRate = 0;
+
+    vertexElements[1].SemanticName         = "NORMAL";
+    vertexElements[1].SemanticIndex        = 0;
+    vertexElements[1].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+    vertexElements[1].InputSlot            = 0;
+    vertexElements[1].AlignedByteOffset    = 12;
+    vertexElements[1].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+    vertexElements[1].InstanceDataStepRate = 0;
+
+    m_stride = 24;
+
+    if (!createVertexBuffer(m_device))
+    {
+        return S_FALSE;
+    }
+
+    if (FAILED(m_device->CreateInputLayout(vertexElements, 
+                    2,
+                    shader->vertexShaderBlob()->GetBufferPointer(), 
+                    shader->vertexShaderBlob()->GetBufferSize(), 
+                    &m_vertexLayout)))
+    {
+        return false;
+    }
+
+    DXUT_SetDebugName(m_vertexLayout, "polygon");
+
+    return S_OK;
+}
+
 void Model::render(ID3D11DeviceContext* context)
 {
     context->IASetPrimitiveTopology(m_topology);
@@ -394,6 +537,25 @@ void Model::render(ID3D11DeviceContext* context)
     {
         context->Draw(m_numVertices, 0);
     }
+}
+
+void Model::render(ID3D11DeviceContext* context, UINT count)
+{
+	context->IASetPrimitiveTopology(m_topology);
+	context->IASetInputLayout(m_vertexLayout);
+
+	UINT offset = 0;
+	context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &m_stride, &offset);
+
+	if (m_indexBuffer != NULL)
+	{
+		context->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		context->DrawIndexedInstanced(m_numIndices, count, 0, 0, 0);
+	}
+	else
+	{
+		context->DrawInstanced(m_numVertices, count, 0, 0);
+	}
 }
 
 bool Model::createVertexBuffer(ID3D11Device *device)
