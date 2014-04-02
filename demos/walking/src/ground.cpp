@@ -37,6 +37,10 @@ Ground::Ground()
 	//fclose(fp);
 
 	m_shader = NULL;
+    m_tileTexture = NULL;
+    m_tileSampler = NULL;
+    m_cbEveryFrame = NULL;
+    m_cbInitial = NULL;
 }
 
 Ground::~Ground()
@@ -44,7 +48,9 @@ Ground::~Ground()
 	SAFE_DELETE(m_shader);
     SAFE_DELETE(m_block);
 	SAFE_DELETE(m_cbEveryFrame);
-	//SAFE_DELETE(m_tileTexture);
+    SAFE_DELETE(m_cbInitial);
+	SAFE_DELETE(m_tileTexture);
+    SAFE_DELETE(m_tileSampler);
 }
 
 HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
@@ -63,6 +69,9 @@ HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
 
 	m_cbEveryFrame = new dxf::CBuffer<CbEveryFrameStruct>(device);
     V_RETURN(m_cbEveryFrame->create(context, "cb-everyframe", "vs", 0));
+
+    m_cbInitial = new dxf::CBuffer<CbInitialStruct>(device);
+    V_RETURN(m_cbInitial->create(context, "cb-initial", "vs", 1));
     
 #define TEXTURE_ROOT "../demos/walking/media/textures"
     loadTiles(device, context, TEXTURE_ROOT"/tileconf.txt", TEXTURE_ROOT"/tile.bmp");
@@ -144,7 +153,7 @@ HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
         }
     }
 
-    validateTiling(w, h);
+    //validateTiling(w, h);
     
 	return S_OK;
 }
@@ -217,9 +226,6 @@ void Ground::update(const DirectX::XMFLOAT3& position,
             tiling[tileIndex] = m_tiling[oldTileIndex];
         }
     }
-
-	//DXF_ASSERT(memcmp(tiling, m_tiling, sizeof(int) * w * h) == 0);//
-
 
     // Filing the rest
     int hedge[200];
@@ -295,7 +301,7 @@ void Ground::update(const DirectX::XMFLOAT3& position,
         }
     }
 
-    validateTiling(w, h);
+    //validateTiling(w, h);
 
     m_bb[0] = xmini;
     m_bb[1] = zmini;
@@ -306,7 +312,9 @@ void Ground::update(const DirectX::XMFLOAT3& position,
 void Ground::render(ID3D11DeviceContext* context)
 {
 	m_cbEveryFrame->sync(context);
-        
+    m_tileTexture->bind(context, 0, PIXEL_SHADER_BIT);
+    m_tileSampler->bind(context, 0, PIXEL_SHADER_BIT);
+
 	m_block->render(context, m_numActiveBlocks);
 }
     
@@ -356,11 +364,19 @@ void Ground::loadTiles(ID3D11Device* device,
     }
 
     // Load the image.
-    //m_tileTexture = new dxf::Texture(device);
-    //if (!m_tileTexture->load2DTexture(context, tileImage)) 
-    //{
-    //    return ;
-    //}
+    m_tileTexture = new dxf::Texture(device);
+    if (!m_tileTexture->load2DTexture(context, tileImage)) 
+    {
+        return ;
+    }
+    m_tileSampler = new dxf::Sampler(device);
+    m_tileSampler->create(D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR, 
+        D3D11_TEXTURE_ADDRESS_CLAMP,
+        D3D11_TEXTURE_ADDRESS_CLAMP,
+        D3D11_TEXTURE_ADDRESS_CLAMP);
+
+    // Initialize the initial CB
+    // TODO:
 }
     
 void Ground::validateTiling(int w, int h)

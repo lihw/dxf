@@ -48,13 +48,20 @@ private:
 private:
     dxf::Model* m_block;
     UINT m_numActiveBlocks;
+    struct CbInitialStruct
+    {
+        DirectX::XMFLOAT4 tilingUV;
+    };
     struct CbEveryFrameStruct   
     {
+        UINT tiling[100];
         DirectX::XMMATRIX mvp[100];
     };
+    dxf::CBuffer<CbInitialStruct>*     m_cbInitial;
     dxf::CBuffer<CbEveryFrameStruct>*  m_cbEveryFrame;
     dxf::Shader*                       m_shader;
-    //dxf::Texture*                      m_tileTexture;
+    dxf::Texture*                      m_tileTexture;
+    dxf::Sampler*                      m_tileSampler;
     int                                m_bb[4]; //
     int                                m_tiling[100];
     Block                              m_tiles[36];
