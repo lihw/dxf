@@ -11,6 +11,7 @@
 
 #include "dxf_framebuffer.h"
 
+#include "DXUT/Core/DXUT.h"
 
 DXF_NAMESPACE_BEGIN
 
@@ -41,7 +42,7 @@ HRESULT FrameBuffer::create(UINT width,
                UINT depthFormat,
                UINT stencilFormat)
 {
-    HRESULT result;
+    HRESULT hr;
 
     // Initialize the render target texture description.
     D3D11_TEXTURE2D_DESC textureDesc;
@@ -52,7 +53,7 @@ HRESULT FrameBuffer::create(UINT width,
     textureDesc.Height = height;
     textureDesc.MipLevels = 1;
     textureDesc.ArraySize = 1;
-    textureDesc.Format = colorFormat;
+    textureDesc.Format = (DXGI_FORMAT)colorFormat;
     textureDesc.SampleDesc.Count = 1;
     textureDesc.Usage = D3D11_USAGE_DEFAULT;
     textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -70,7 +71,7 @@ HRESULT FrameBuffer::create(UINT width,
 
     V_RETURN(device->CreateRenderTargetView(m_colorTexture, &renderTargetViewDesc, &m_renderTargetView));
 
-    // Initialize the depth stencil texture descritpion
+    // Initialize the depth stencil texture description
     D3D11_TEXTURE2D_DESC descDepth;
     descDepth.Width = width;
     descDepth.Height = height;
@@ -83,7 +84,7 @@ HRESULT FrameBuffer::create(UINT width,
     descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     descDepth.CPUAccessFlags = 0;
     descDepth.MiscFlags = 0;
-    V_RESULT(m_device->CreateTexture2D(&descDepth, NULL, &m_depthStencilTexture));
+    V_RETURN(m_device->CreateTexture2D(&descDepth, NULL, &m_depthStencilTexture));
 
     // Create the depth stencil view
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;

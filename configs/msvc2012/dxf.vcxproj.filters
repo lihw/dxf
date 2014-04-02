@@ -194,9 +194,6 @@
     <ClCompile Include="..\..\src\util\xyz.cpp">
       <Filter>util</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\dxf_framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\dxf_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

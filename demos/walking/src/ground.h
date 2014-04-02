@@ -54,7 +54,7 @@ private:
     };
     dxf::CBuffer<CbEveryFrameStruct>*  m_cbEveryFrame;
     dxf::Shader*                       m_shader;
-    dxf::Texture*                      m_tileTexture;
+    //dxf::Texture*                      m_tileTexture;
     int                                m_bb[4]; //
     int                                m_tiling[100];
     Block                              m_tiles[36];

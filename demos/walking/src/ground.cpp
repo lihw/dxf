@@ -44,7 +44,7 @@ Ground::~Ground()
 	SAFE_DELETE(m_shader);
     SAFE_DELETE(m_block);
 	SAFE_DELETE(m_cbEveryFrame);
-	SAFE_DELETE(m_tileTexture);
+	//SAFE_DELETE(m_tileTexture);
 }
 
 HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
@@ -100,7 +100,7 @@ HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
 
     int xmini = (int)floor(xmin / BLOCK_SIZE);
     int zmini = (int)floor(zmin / BLOCK_SIZE);
-    int xmaxi = (int)ceil(xmax/ BLOCK_SIZE);
+    int xmaxi = (int)ceil(xmax / BLOCK_SIZE);
     int zmaxi = (int)ceil(zmax / BLOCK_SIZE);
 
     m_bb[0] = xmini;
@@ -108,8 +108,8 @@ HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
     m_bb[2] = xmaxi;
     m_bb[3] = zmaxi;
 
-	int h = xmaxi - xmini;
-	int w = zmaxi - zmini;
+	int h = xmaxi - xmini + 1; // The number of rows
+	int w = zmaxi - zmini + 1; // The number of columns
 
     m_numActiveBlocks = h * w;
 
@@ -186,8 +186,8 @@ void Ground::update(const DirectX::XMFLOAT3& position,
     int xmaxi = (int)ceil(xmax/ BLOCK_SIZE);
     int zmaxi = (int)ceil(zmax / BLOCK_SIZE);
 
-    int h = xmaxi - xmini;
-    int w = zmaxi - zmini;
+    int h = xmaxi - xmini + 1;
+    int w = zmaxi - zmini + 1;
 
     int tiling[100];
     memset(tiling, 0xff, 100 * sizeof(int));
@@ -202,23 +202,23 @@ void Ground::update(const DirectX::XMFLOAT3& position,
     interBB[3] = std::min(m_bb[3], zmaxi);
     
     // Fill the tiling plane with intersected tiles
-    for (int z = interBB[1]; z < interBB[3]; ++z)
+    for (int x = interBB[0]; x <= interBB[2]; ++x)
     {
-        for (int x = interBB[0]; x < interBB[2]; ++x)
+        for (int z = interBB[1]; z <= interBB[3]; ++z)
         {
             int oldj = z - m_bb[1];
             int oldi = x - m_bb[0];
             int newj = z - zmini; 
             int newi = x - xmini; 
 
-            int oldTileIndex = oldi * (m_bb[3] - m_bb[1]) + oldj;
+            int oldTileIndex = oldi * (m_bb[3] - m_bb[1] + 1) + oldj;
             int tileIndex = newi * w + newj;
 
             tiling[tileIndex] = m_tiling[oldTileIndex];
         }
     }
 
-	DXF_ASSERT(memcmp(tiling, m_tiling, sizeof(int) * w * h) == 0);
+	//DXF_ASSERT(memcmp(tiling, m_tiling, sizeof(int) * w * h) == 0);//
 
 
     // Filing the rest
@@ -266,7 +266,6 @@ void Ground::update(const DirectX::XMFLOAT3& position,
             }
 		}
 	}
-
     
     // Fill the tiles.
     DirectX::XMMATRIX mProj = camera->GetProjMatrix();
@@ -357,11 +356,11 @@ void Ground::loadTiles(ID3D11Device* device,
     }
 
     // Load the image.
-    m_tileTexture = new dxf::Texture(device);
-    if (!m_tileTexture->load2DTexture(context, tileImage)) 
-    {
-        return ;
-    }
+    //m_tileTexture = new dxf::Texture(device);
+    //if (!m_tileTexture->load2DTexture(context, tileImage)) 
+    //{
+    //    return ;
+    //}
 }
     
 void Ground::validateTiling(int w, int h)
@@ -403,7 +402,7 @@ int Ground::getTileIndex(int n, int e, int s, int w)
 	int wIndex = w;
 
 	return nIndex * (NUM_HCOLORS * NUM_HCOLORS * NUM_VCOLORS) + 
-		   wIndex * (NUM_HCOLORS * NUM_VCOLORS) + 
+		   eIndex * (NUM_HCOLORS * NUM_VCOLORS) + 
 		   sIndex * (NUM_HCOLORS) + 
 		   wIndex;
 }

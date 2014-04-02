@@ -48,7 +48,6 @@
     <ClCompile Include="..\..\src\dxf_abstract_renderer.cpp" />
     <ClCompile Include="..\..\src\dxf_assert.cpp" />
     <ClCompile Include="..\..\src\dxf_cbuffer.cpp" />
-    <ClCompile Include="..\..\src\dxf_framebuffer.cpp" />
     <ClCompile Include="..\..\src\dxf_light.cpp" />
     <ClCompile Include="..\..\src\dxf_log.cpp" />
     <ClCompile Include="..\..\src\dxf_main.cpp" />
