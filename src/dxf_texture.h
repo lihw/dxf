@@ -41,12 +41,15 @@ public:
     ~Texture();
 
     HRESULT load2DTexture(ID3D11DeviceContext* context, const char* path);
+    HRESULT create1DTexture(UINT width, UINT numChannels, void* data);
 
     void bind(ID3D11DeviceContext* context, UINT slot, UINT shaders);
 
 protected:
     ID3D11Device*             m_device;
-    ID3D11Resource*           m_texture;
+    ID3D11Texture1D*          m_texture1D;
+    ID3D11Texture2D*          m_texture2D;
+	ID3D11Resource*           m_textureResource;
     ID3D11ShaderResourceView* m_textureSRV;
 };
 

@@ -242,6 +242,8 @@ void Renderer::turn(float angle)
     
 LRESULT Renderer::msgproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	    m_camera.HandleMessages(hWnd, uMsg, wParam, lParam);
+
     return 0;
 }
     
@@ -264,6 +266,10 @@ void Renderer::updateCamera()
 	{
 		DirectX::XMFLOAT3 eye(-100.0f, 100.0f, 100.0f);
 		DirectX::XMFLOAT3 at(0.0f, 0.0f, 0.0f);
+
+		//DirectX::XMFLOAT3 eye(-24.0f, 20.0f, -48.0f);
+		//DirectX::XMFLOAT3 at(-24.0f, 0.0f, -48.0f);
+
 
 		DirectX::XMVECTOR vecEye = DirectX::XMLoadFloat3(&eye);
 		DirectX::XMVECTOR vecAt = DirectX::XMLoadFloat3(&at);

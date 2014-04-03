@@ -86,13 +86,17 @@ Texture::Texture(ID3D11Device* device)
 {
     DXF_ASSERT(device != NULL);
     m_device = device;
-    m_texture = NULL;
+    m_texture1D = NULL;
+    m_texture2D = NULL;
+	m_textureResource = NULL;
     m_textureSRV = NULL;
 }
 
 Texture::~Texture()
 {
-    SAFE_RELEASE(m_texture);
+    SAFE_RELEASE(m_texture1D);
+    SAFE_RELEASE(m_texture2D);
+	SAFE_RELEASE(m_textureResource);
     SAFE_RELEASE(m_textureSRV);
 }
 
@@ -102,12 +106,45 @@ HRESULT Texture::load2DTexture(ID3D11DeviceContext* context, const char* path)
     swprintf(wpath, L"%hs", path);
     HRESULT hr;
 	
-	V_RETURN(DirectX::CreateWICTextureFromFile(m_device, context, wpath, &m_texture, &m_textureSRV));
+	V_RETURN(DirectX::CreateWICTextureFromFile(m_device, context, wpath, &m_textureResource, &m_textureSRV));
 
 	const char* suffix = strrchr(path, '.');
     DXUT_SetDebugName(m_textureSRV, suffix + 1);
 
     return S_OK;
+}
+    
+HRESULT Texture::create1DTexture(UINT width, UINT format, void* data)
+{
+	HRESULT hr;
+
+    D3D11_TEXTURE1D_DESC td;
+	td.ArraySize = 1;
+	td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	td.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	td.Format = (DXGI_FORMAT)format;
+	td.MipLevels = 1;
+	td.MiscFlags = 0;
+	td.Usage = D3D11_USAGE_DYNAMIC;
+	td.Width = width;
+
+    D3D11_SUBRESOURCE_DATA srd;
+    srd.pSysMem = data;
+    srd.SysMemPitch = 0;
+    srd.SysMemSlicePitch = 0;
+    
+    V_RETURN(m_device->CreateTexture1D(&td, &srd, &m_texture1D));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+
+    srvDesc.Format = (DXGI_FORMAT)format;
+    srvDesc.ViewDimension = (D3D_SRV_DIMENSION)(D3D11_SRV_DIMENSION_TEXTURE1D);
+    srvDesc.Texture1D.MostDetailedMip = 0;
+    srvDesc.Texture1D.MipLevels = 1;
+    
+    V_RETURN(m_device->CreateShaderResourceView(m_texture1D, &srvDesc, &m_textureSRV));	
+
+	return S_OK;
 }
 
 void Texture::bind(ID3D11DeviceContext* context, UINT slot, UINT shaders)

@@ -74,7 +74,7 @@ HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
     V_RETURN(m_cbInitial->create(context, "cb-initial", "vs", 1));
     
 #define TEXTURE_ROOT "../demos/walking/media/textures"
-    loadTiles(device, context, TEXTURE_ROOT"/tileconf.txt", TEXTURE_ROOT"/tile.bmp");
+    loadTiles(device, context, TEXTURE_ROOT"/tileconf.txt", TEXTURE_ROOT"/block.bmp");
 #undef TEXTURE_ROOT
 
     // Initialize the original tiling.
@@ -297,6 +297,7 @@ void Ground::update(const DirectX::XMFLOAT3& position,
 
             DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(xx, 0, zz);
             int i = m_numActiveBlocks++;
+			m_cbEveryFrame->data().tiling[i].x = tileIndex;
             m_cbEveryFrame->data().mvp[i] = XMMatrixTranspose(translation * viewProj); 
         }
     }
@@ -311,6 +312,7 @@ void Ground::update(const DirectX::XMFLOAT3& position,
 
 void Ground::render(ID3D11DeviceContext* context)
 {
+	m_cbInitial->sync(context);
 	m_cbEveryFrame->sync(context);
     m_tileTexture->bind(context, 0, PIXEL_SHADER_BIT);
     m_tileSampler->bind(context, 0, PIXEL_SHADER_BIT);
@@ -336,7 +338,7 @@ bool Ground::isInsideTriangle(const float triangle[][2], float x, float z)
            (x3 - x1) * (y - y3) - (y3 - y1) * (x - x3) > 0;    
 }
     
-void Ground::loadTiles(ID3D11Device* device,
+HRESULT Ground::loadTiles(ID3D11Device* device,
                        ID3D11DeviceContext* context,
                        const char* tileConfiguration,
                        const char* tileImage)
@@ -364,19 +366,29 @@ void Ground::loadTiles(ID3D11Device* device,
     }
 
     // Load the image.
+	HRESULT hr;
     m_tileTexture = new dxf::Texture(device);
-    if (!m_tileTexture->load2DTexture(context, tileImage)) 
-    {
-        return ;
-    }
-    m_tileSampler = new dxf::Sampler(device);
+    V_RETURN(m_tileTexture->load2DTexture(context, tileImage)); 
+    
+	m_tileSampler = new dxf::Sampler(device);
     m_tileSampler->create(D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR, 
         D3D11_TEXTURE_ADDRESS_CLAMP,
         D3D11_TEXTURE_ADDRESS_CLAMP,
         D3D11_TEXTURE_ADDRESS_CLAMP);
 
     // Initialize the initial CB
-    // TODO:
+	int index = 0;
+	for (int i = 0; i < 6; ++i)
+	{
+		for (int j = 0; j < 6; ++j)
+		{
+			m_cbInitial->data().tilingUV[index++] = DirectX::XMFLOAT4(1.0f / 6.0f, 1.0f / 6.0f, 
+				(float)j / 6.0f, (float)i / 6.0f);
+		}
+	}
+
+	return S_OK;
+
 }
     
 void Ground::validateTiling(int w, int h)

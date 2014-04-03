@@ -34,7 +34,7 @@ public:
     void render(ID3D11DeviceContext* context);
 
 private:
-    void loadTiles(ID3D11Device* device,
+    HRESULT loadTiles(ID3D11Device* device,
                    ID3D11DeviceContext* context,
                    const char* tileConfiguration,
                    const char* tileImage);
@@ -50,12 +50,12 @@ private:
     UINT m_numActiveBlocks;
     struct CbInitialStruct
     {
-        DirectX::XMFLOAT4 tilingUV;
+        DirectX::XMFLOAT4 tilingUV[64];
     };
     struct CbEveryFrameStruct   
     {
-        UINT tiling[100];
-        DirectX::XMMATRIX mvp[100];
+        DirectX::XMMATRIX mvp[128];
+		DirectX::XMINT4   tiling[128];
     };
     dxf::CBuffer<CbInitialStruct>*     m_cbInitial;
     dxf::CBuffer<CbEveryFrameStruct>*  m_cbEveryFrame;
