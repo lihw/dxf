@@ -55,12 +55,15 @@ private:
     struct CbEveryFrameStruct   
     {
         DirectX::XMMATRIX mvp[128];
+		DirectX::XMMATRIX worldView[128];
 		DirectX::XMINT4   tiling[128];
     };
     dxf::CBuffer<CbInitialStruct>*     m_cbInitial;
     dxf::CBuffer<CbEveryFrameStruct>*  m_cbEveryFrame;
     dxf::Shader*                       m_shader;
     dxf::Texture*                      m_tileTexture;
+    dxf::Texture*                      m_gradientTexture; // for perlin noise
+    dxf::Sampler*                      m_gradientSampler; // for perlin noise
     dxf::Sampler*                      m_tileSampler;
     int                                m_bb[4]; //
     int                                m_tiling[100];

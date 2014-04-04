@@ -264,7 +264,7 @@ void Renderer::updateCamera()
 	}
 	else
 	{
-		DirectX::XMFLOAT3 eye(-100.0f, 100.0f, 100.0f);
+		DirectX::XMFLOAT3 eye(-50.0f, 50.0f, 50.0f);
 		DirectX::XMFLOAT3 at(0.0f, 0.0f, 0.0f);
 
 		//DirectX::XMFLOAT3 eye(-24.0f, 20.0f, -48.0f);

@@ -11,6 +11,7 @@
 #include <float.h>
 
 #include "walking.h"
+#include "sampler.h"
 
 #define NUM_HCOLORS 3
 #define NUM_VCOLORS 2
@@ -19,23 +20,8 @@ Ground::Ground()
 {
     m_block = NULL;
     m_numActiveBlocks = 0;
-
-	//FILE* fp = fopen("tiles.txt", "wb");
-	//for (int n = 0; n < NUM_VCOLORS; ++n)
-	//{
-	//	for (int e = 0; e < NUM_HCOLORS; ++e)
-	//	{
-	//		for (int s = 0; s < NUM_VCOLORS; ++s)
-	//		{
-	//			for (int w = 0; w < NUM_HCOLORS; ++w)
-	//			{
-	//				fprintf(fp, "%d%d%d%d\n", VCOLORS[n], HCOLORS[e], VCOLORS[s], HCOLORS[w]);
-	//			}
-	//		}
-	//	}
-	//}
-	//fclose(fp);
-
+    m_gradientTexture = NULL;
+    m_gradientSampler = NULL;
 	m_shader = NULL;
     m_tileTexture = NULL;
     m_tileSampler = NULL;
@@ -51,6 +37,8 @@ Ground::~Ground()
     SAFE_DELETE(m_cbInitial);
 	SAFE_DELETE(m_tileTexture);
     SAFE_DELETE(m_tileSampler);
+    SAFE_DELETE(m_gradientTexture);
+    SAFE_DELETE(m_gradientSampler);
 }
 
 HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
@@ -76,6 +64,28 @@ HRESULT Ground::initialize(ID3D11Device* device, ID3D11DeviceContext* context,
 #define TEXTURE_ROOT "../demos/walking/media/textures"
     loadTiles(device, context, TEXTURE_ROOT"/tileconf.txt", TEXTURE_ROOT"/block.bmp");
 #undef TEXTURE_ROOT
+
+    //
+    // The gradient texture initialization.
+    RingSampler sampler(128);
+    sampler.sample();
+    float* gradientTextureData = new float [128 * 2];
+    for (int i = 0; i < 128; ++i)
+    {
+        gradientTextureData[i * 2 + 0] = sampler.sample(i).x;
+        gradientTextureData[i * 2 + 1] = sampler.sample(i).y;
+    }
+
+    m_gradientTexture = new dxf::Texture(device);
+    m_gradientTexture->create1DTexture(128, DXGI_FORMAT_R32G32_FLOAT, gradientTextureData);
+
+    delete [] gradientTextureData;
+	
+    m_gradientSampler = new dxf::Sampler(device);
+    m_gradientSampler->create(D3D11_FILTER_COMPARISON_MIN_MAG_MIP_POINT, 
+        D3D11_TEXTURE_ADDRESS_WRAP,
+        D3D11_TEXTURE_ADDRESS_WRAP,
+        D3D11_TEXTURE_ADDRESS_WRAP);
 
     // Initialize the original tiling.
     // Compute the bounding box of the spotlight area
@@ -298,6 +308,7 @@ void Ground::update(const DirectX::XMFLOAT3& position,
             DirectX::XMMATRIX translation = DirectX::XMMatrixTranslation(xx, 0, zz);
             int i = m_numActiveBlocks++;
 			m_cbEveryFrame->data().tiling[i].x = tileIndex;
+			m_cbEveryFrame->data().worldView[i] = XMMatrixTranspose(translation); 
             m_cbEveryFrame->data().mvp[i] = XMMatrixTranspose(translation * viewProj); 
         }
     }
@@ -316,6 +327,8 @@ void Ground::render(ID3D11DeviceContext* context)
 	m_cbEveryFrame->sync(context);
     m_tileTexture->bind(context, 0, PIXEL_SHADER_BIT);
     m_tileSampler->bind(context, 0, PIXEL_SHADER_BIT);
+    m_gradientTexture->bind(context, 1, PIXEL_SHADER_BIT);
+    m_gradientSampler->bind(context, 1, PIXEL_SHADER_BIT);
 
 	m_block->render(context, m_numActiveBlocks);
 }

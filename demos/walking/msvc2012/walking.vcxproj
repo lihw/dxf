@@ -14,12 +14,14 @@
     <ClCompile Include="..\src\control.cpp" />
     <ClCompile Include="..\src\ground.cpp" />
     <ClCompile Include="..\src\renderer.cpp" />
+    <ClCompile Include="..\src\sampler.cpp" />
     <ClCompile Include="..\src\walking.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\control.h" />
     <ClInclude Include="..\src\ground.h" />
     <ClInclude Include="..\src\renderer.h" />
+    <ClInclude Include="..\src\sampler.h" />
     <ClInclude Include="..\src\walking.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
